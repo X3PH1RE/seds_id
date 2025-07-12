@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEDS CUSAT - Digital ID Card</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>SEDS CUSAT</h1>
+                <p>Students for the Exploration and Development of Space</p>
+            </div>
+            <div class="user-info">
+                <span id="welcomeMessage">Welcome, Member!</span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="dashboard">
+                <div class="id-card">
+                    <div class="card-header">
+                        <h3>SEDS CUSAT</h3>
+                        <p>Digital Member ID</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="profile-section">
+                            <div class="profile-photo">
+                                <img id="profilePhoto" src="https://via.placeholder.com/150x150/4A90E2/FFFFFF?text=Photo" alt="Profile Photo">
+                            </div>
+                            <div class="member-details">
+                                <h2 id="memberName">John Doe</h2>
+                                <p class="member-id">ID: <span id="memberId">#SEDS2024001</span></p>
+                                <p class="member-role">Role: <span id="memberRole">Core Team</span></p>
+                                <p class="member-batch">Batch: <span id="memberBatch">2024</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="qr-section">
+                            <div class="qr-code">
+                                <canvas id="qrCanvas"></canvas>
+                            </div>
+                            <p class="qr-label">Verification QR</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <p class="validity">Valid for Academic Year 2024-25</p>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button id="downloadBtn" class="action-btn">Download ID Card</button>
+                    <button id="refreshBtn" class="action-btn secondary">Refresh Data</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 SEDS CUSAT. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="qr-fallback.js"></script>
+    <script>
+        // Try to load QRCode library from multiple CDNs
+        function loadQRCodeLibrary() {
+            const cdnUrls = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js'
+            ];
+            
+            let currentIndex = 0;
+            
+            function tryLoadScript() {
+                if (currentIndex >= cdnUrls.length) {
+                    console.warn('All CDN attempts failed, using fallback QR generator');
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = cdnUrls[currentIndex];
+                script.onload = function() {
+                    console.log('QRCode library loaded successfully from:', cdnUrls[currentIndex]);
+                };
+                script.onerror = function() {
+                    console.warn('Failed to load QRCode library from:', cdnUrls[currentIndex]);
+                    currentIndex++;
+                    tryLoadScript();
+                };
+                document.head.appendChild(script);
+            }
+            
+            tryLoadScript();
+        }
+        
+        // Load the QRCode library
+        loadQRCodeLibrary();
+    </script>
+    <script src="script.js"></script>
+</body>
+</html> 

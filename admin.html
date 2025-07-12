@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEDS CUSAT - Admin Verification</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>SEDS CUSAT</h1>
+                <p>Admin Verification Portal</p>
+            </div>
+            <div class="user-info">
+                <span id="adminWelcome">Welcome, Admin!</span>
+                <button id="adminLogoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="admin-dashboard">
+                <div class="verification-section">
+                    <h2>QR Code Verification</h2>
+                    
+                    <div class="verification-methods">
+                        <div class="method-card">
+                            <h3>Manual QR Data Input</h3>
+                            <div class="form-group">
+                                <label for="qrData">Enter QR Code Data:</label>
+                                <textarea id="qrData" placeholder="Paste the QR code data here..."></textarea>
+                            </div>
+                            <button id="verifyBtn" class="action-btn">Verify QR Code</button>
+                        </div>
+
+                        <div class="method-card">
+                            <h3>Camera Scanner</h3>
+                            <div id="cameraSection">
+                                <div id="cameraPreview">
+                                    <video id="video" autoplay playsinline></video>
+                                    <canvas id="canvas" style="display: none;"></canvas>
+                                </div>
+                                <div class="camera-controls">
+                                    <button id="startCameraBtn" class="action-btn">Start Camera</button>
+                                    <button id="stopCameraBtn" class="action-btn secondary" style="display: none;">Stop Camera</button>
+                                </div>
+                                <div id="scanStatus" style="margin-top: 10px; text-align: center; color: #666; font-size: 0.9rem;">
+                                    Camera ready - position QR code in view
+                                </div>
+                            </div>
+                            <p class="note">Note: Camera scanning requires HTTPS in production</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verification-results">
+                    <h3>Verification Results</h3>
+                    <div id="verificationOutput" class="output-section">
+                        <p class="no-results">No verification performed yet.</p>
+                    </div>
+                </div>
+
+                <div class="member-database">
+                    <h3>Member Database</h3>
+                    <div class="database-controls">
+                        <button id="refreshDbBtn" class="action-btn secondary">Refresh Database</button>
+                        <button id="exportDbBtn" class="action-btn secondary">Export Data</button>
+                    </div>
+                    <div id="memberList" class="member-list">
+                        <!-- Members will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 SEDS CUSAT. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="qr-fallback.js"></script>
+    <script>
+        // Try to load QRCode library from multiple CDNs
+        function loadQRCodeLibrary() {
+            const cdnUrls = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js'
+            ];
+            
+            let currentIndex = 0;
+            
+            function tryLoadScript() {
+                if (currentIndex >= cdnUrls.length) {
+                    console.warn('All CDN attempts failed, using fallback QR generator');
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = cdnUrls[currentIndex];
+                script.onload = function() {
+                    console.log('QRCode library loaded successfully from:', cdnUrls[currentIndex]);
+                };
+                script.onerror = function() {
+                    console.warn('Failed to load QRCode library from:', cdnUrls[currentIndex]);
+                    currentIndex++;
+                    tryLoadScript();
+                };
+                document.head.appendChild(script);
+            }
+            
+            tryLoadScript();
+        }
+        
+        // Try to load jsQR library for scanning
+        function loadJsQR() {
+            const jsQRUrls = [
+                'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
+                'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js'
+            ];
+            
+            let currentIndex = 0;
+            
+            function tryLoadJsQR() {
+                if (currentIndex >= jsQRUrls.length) {
+                    console.warn('jsQR library failed to load, QR scanning will be limited');
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = jsQRUrls[currentIndex];
+                script.onload = function() {
+                    console.log('jsQR library loaded successfully from:', jsQRUrls[currentIndex]);
+                };
+                script.onerror = function() {
+                    console.warn('Failed to load jsQR library from:', jsQRUrls[currentIndex]);
+                    currentIndex++;
+                    tryLoadJsQR();
+                };
+                document.head.appendChild(script);
+            }
+            
+            tryLoadJsQR();
+        }
+        
+        // Load both libraries
+        loadQRCodeLibrary();
+        loadJsQR();
+    </script>
+    <script src="admin.js"></script>
+</body>
+</html> 
