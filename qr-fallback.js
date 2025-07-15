@@ -1,7 +1,4 @@
-// Fallback QR Code Generator for SEDS CUSAT Digital ID System
-// This provides a visual representation when external QR libraries fail to load
 
-// Simple QR code pattern generator (ASCII art style)
 function generateFallbackQR(canvas, data) {
     const ctx = canvas.getContext('2d');
     const size = 120;
